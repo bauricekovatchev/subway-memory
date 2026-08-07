@@ -134,6 +134,17 @@ body{
 .pl-row .pl-status{font-size:12px; padding:5px 10px; border-radius:999px; background:var(--panel2); color:var(--muted); flex-shrink:0;}
 .pl-row .pl-status.done{background:rgba(46,204,113,.18); color:var(--good);}
 
+/* ---------- home grid v2 (color-grouped, includes shuttles) ---------- */
+.grid-item{display:flex; flex-direction:column; align-items:center; gap:5px;}
+.grid-item-label{font-size:9.5px; color:var(--muted); text-align:center; line-height:1.15; min-height:23px; max-width:66px;}
+
+/* ---------- inline test input ---------- */
+.station-row input.inline-input{
+  flex:1; min-width:0; background:transparent; border:none; border-bottom:2px solid var(--accent);
+  color:var(--text); font-size:15.5px; font-weight:600; font-family:inherit; padding:4px 2px; outline:none;
+}
+.station-row input.inline-input::placeholder{color:var(--muted); font-weight:400;}
+
 </style>
 </head>
 <body>
@@ -152,8 +163,6 @@ body{
       </div>
       <div class="section-label">Lines</div>
       <div class="line-grid" id="home-line-grid"></div>
-      <div class="section-label">Shuttles</div>
-      <div class="shuttle-row" id="home-shuttle-row"></div>
     </div>
   </div>
 
@@ -176,13 +185,7 @@ body{
       <div class="grow" id="test-title" style="text-align:center; font-weight:700; font-size:14px;"></div>
       <button class="endbtn" id="test-end-btn">End</button>
     </div>
-    <div class="line-scroll" id="test-scroll" style="padding-bottom:20px;"></div>
-    <div class="typebar-wrap">
-      <div class="target-hint" id="test-hint">Type the next station…</div>
-      <div class="typebar">
-        <input id="test-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type station name…">
-      </div>
-    </div>
+    <div class="line-scroll" id="test-scroll" style="padding-bottom:60px;"></div>
   </div>
 
   <!-- PROGRESS -->
@@ -219,9 +222,10 @@ body{
 
 <script>
 /* ============ DATA ============ */
-const DATA = {"order": ["1", "2", "3", "4", "5", "6", "7", "A", "B", "C", "D", "E", "F", "G", "J", "Z", "L", "M", "N", "Q", "R", "W", "S42", "SFR", "SRP"], "lines": {"1": {"name": "1", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Van Cortlandt Park-242 St", "238 St", "231 St", "Marble Hill-225 St", "215 St", "207 St", "Dyckman St", "191 St", "181 St", "168 St", "157 St", "145 St", "137 St-City College", "125 St", "116 St-Columbia University", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "79 St", "72 St", "66 St-Lincoln Center", "59 St-Columbus Circle", "50 St", "Times Sq-42 St", "34 St-Penn Station", "28 St", "23 St", "18 St", "14 St", "Christopher St-Stonewall", "Houston St", "Canal St", "Franklin St", "Chambers St", "WTC Cortlandt", "Rector St", "South Ferry"]}]}, "2": {"name": "2", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Wakefield-241 St", "Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East", "E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "3": {"name": "3", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Harlem-148 St", "145 St", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "Nostrand Av", "Kingston Av", "Crown Heights-Utica Av", "Sutter Av-Rutland Rd", "Saratoga Av", "Rockaway Av", "Junius St", "Pennsylvania Av", "Van Siclen Av", "New Lots Av"]}]}, "4": {"name": "4", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Woodlawn", "Mosholu Pkwy", "Bedford Pk Blvd-Lehman College", "Kingsbridge Rd", "Fordham Rd", "183 St", "Burnside Av", "176 St", "Mt Eden Av", "170 St", "167 St", "161 St-Yankee Stadium", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "Crown Heights-Utica Av"]}]}, "5": {"name": "5", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "fork", "branches": [[{"type": "trunk", "stops": ["Eastchester-Dyre Av", "Baychester Av", "Gun Hill Rd", "Pelham Pkwy", "Morris Park"]}], [{"type": "trunk", "stops": ["Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East"]}]]}, {"type": "trunk", "stops": ["E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "6": {"name": "6", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Pelham Bay Park", "Buhre Av", "Middletown Rd", "Westchester Sq-East Tremont Av", "Zerega Av", "Castle Hill Av", "Parkchester", "St Lawrence Av", "Morrison Av-Soundview", "Elder Av", "Whitlock Av", "Hunts Point Av", "Longwood Av", "E 149 St", "E 143 St-St Mary's St", "Cypress Av", "Brook Av", "3 Av-138 St", "125 St", "116 St", "110 St", "103 St", "96 St", "86 St", "77 St", "68 St-Hunter College", "59 St", "51 St", "Grand Central-42 St", "33 St", "28 St", "23 St", "14 St-Union Sq", "Astor Pl", "Bleecker St", "Spring St", "Canal St", "Brooklyn Bridge-City Hall"]}]}, "7": {"name": "7", "color": "#B933AD", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["34 St-Hudson Yards", "Times Sq-42 St", "5 Av", "Grand Central-42 St", "Vernon Blvd-Jackson Av", "Hunters Point Av", "Court Sq", "Queensboro Plaza", "33 St-Rawson St", "40 St-Lowery St", "46 St-Bliss St", "52 St", "61 St-Woodside", "69 St", "74 St-Broadway", "82 St-Jackson Hts", "90 St-Elmhurst Av", "Junction Blvd", "103 St-Corona Plaza", "111 St", "Mets-Willets Point", "Flushing-Main St"]}]}, "A": {"name": "A", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Inwood-207 St", "Dyckman St", "190 St", "181 St", "175 St", "168 St", "145 St", "125 St", "59 St-Columbus Circle", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "14 St", "W 4 St-Washington Sq", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Nostrand Av", "Utica Av", "Broadway Junction", "Euclid Av", "Grant Av", "80 St", "88 St", "Rockaway Blvd"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["104 St", "111 St", "Ozone Park-Lefferts Blvd"]}], [{"type": "trunk", "stops": ["Aqueduct Racetrack", "Aqueduct-North Conduit Av", "Howard Beach-JFK Airport", "Broad Channel"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["Beach 67 St", "Beach 60 St", "Beach 44 St", "Beach 36 St", "Beach 25 St", "Far Rockaway-Mott Av"]}], [{"type": "trunk", "stops": ["Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]]}]]}]}, "B": {"name": "B", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Church Av", "Newkirk Plaza", "Kings Hwy", "Sheepshead Bay", "Brighton Beach"]}]}, "C": {"name": "C", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["168 St", "163 St-Amsterdam Av", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "50 St", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "23 St", "14 St", "W 4 St-Washington Sq", "Spring St", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Lafayette Av", "Clinton-Washington Avs", "Franklin Av", "Nostrand Av", "Kingston-Throop Avs", "Utica Av", "Ralph Av", "Rockaway Av", "Broadway Junction", "Liberty Av", "Van Siclen Av", "Shepherd Av", "Euclid Av"]}]}, "D": {"name": "D", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Norwood-205 St", "Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "125 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "Atlantic Av-Barclays Ctr", "36 St", "9 Av", "Fort Hamilton Pkwy", "50 St", "55 St", "62 St", "71 St", "79 St", "18 Av", "20 Av", "Bay Pkwy", "25 Av", "Bay-50 St", "Coney Island-Stillwell Av"]}]}, "E": {"name": "E", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["World Trade Center", "Canal St", "Spring St", "W 4 St-Washington Sq", "14 St", "23 St", "34 St-Penn Station", "42 St-Port Authority Bus Terminal", "50 St", "7 Av", "5 Av/53 St", "Lexington Av/53 St", "Court Sq-23 St", "Queens Plaza", "Jackson Hts-Roosevelt Av", "Forest Hills-71 Av", "75 Av", "Kew Gardens-Union Tpke", "Briarwood", "Jamaica-Van Wyck", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "F": {"name": "F", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Jamaica-179 St", "169 St", "Parsons Blvd", "Sutphin Blvd", "Briarwood", "Kew Gardens-Union Tpke", "75 Av", "Forest Hills-71 Av", "Jackson Hts-Roosevelt Av", "Queens Plaza", "Court Sq-23 St", "Lexington Av/53 St", "5 Av/53 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "2 Av", "Delancey St-Essex St", "East Broadway", "York St", "Jay St-MetroTech", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 St", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av", "Ditmas Av", "18 Av", "Avenue I", "Bay Pkwy", "Avenue N", "Avenue P", "Kings Hwy", "Avenue U", "Avenue X", "Neptune Av", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "G": {"name": "G", "color": "#6CBE45", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Court Sq", "21 St", "Greenpoint Av", "Nassau Av", "Metropolitan Av", "Broadway", "Flushing Av", "Myrtle-Willoughby Avs", "Bedford-Nostrand Avs", "Classon Av", "Clinton-Washington Avs", "Fulton St", "Hoyt-Schermerhorn", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 Sts", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av"]}]}, "J": {"name": "J", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Kosciuszko St", "Gates Av", "Halsey St", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Cleveland St", "Norwood Av", "Crescent St", "Cypress Hills", "75 St-Elderts Ln", "85 St-Forest Pkwy", "Woodhaven Blvd", "104 St", "111 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "Z": {"name": "Z", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Myrtle Av", "Gates Av", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Norwood Av", "Crescent St", "75 St-Elderts Ln", "Woodhaven Blvd", "104 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "L": {"name": "L", "color": "#A7A9AC", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["8 Av", "6 Av", "14 St-Union Sq", "3 Av", "1 Av", "Bedford Av", "Lorimer St", "Graham Av", "Grand St", "Montrose Av", "Morgan Av", "Jefferson St", "DeKalb Av", "Myrtle-Wyckoff Avs", "Halsey St", "Wilson Av", "Bushwick Av-Aberdeen St", "Broadway Junction", "Atlantic Av", "Sutter Av", "Livonia Av", "New Lots Av", "East 105 St", "Canarsie-Rockaway Pkwy"]}]}, "M": {"name": "M", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av-Newtown", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "21 St-Queensbridge", "Roosevelt Island", "Lexington Av/63 St", "57 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Central Av", "Knickerbocker Av", "Myrtle-Wyckoff Avs", "Seneca Av", "Forest Av", "Fresh Pond Rd", "Middle Village-Metropolitan Av"]}]}, "N": {"name": "N", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "Atlantic Av-Barclays Ctr", "36 St", "59 St", "8 Av", "Fort Hamilton Pkwy", "New Utrecht Av", "18 Av", "20 Av", "Bay Pkwy", "Kings Hwy", "Avenue U", "86 St", "Coney Island-Stillwell Av"]}]}, "Q": {"name": "Q", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["96 St", "86 St", "72 St", "Lexington Av/63 St", "57 St-7 Av", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Parkside Av", "Church Av", "Beverly Rd", "Cortelyou Rd", "Newkirk Plaza", "Avenue H", "Avenue J", "Avenue M", "Kings Hwy", "Avenue U", "Neck Rd", "Sheepshead Bay", "Brighton Beach", "Ocean Pkwy", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "R": {"name": "R", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "Queens Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry", "Court St", "Jay St-MetroTech", "DeKalb Av", "Atlantic Av-Barclays Ctr", "Union St", "4 Av-9 St", "Prospect Av", "25 St", "36 St", "45 St", "53 St", "59 St", "Bay Ridge Av", "77 St", "86 St", "Bay Ridge-95 St"]}]}, "W": {"name": "W", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry"]}]}, "S42": {"name": "S", "fullName": "42 St Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Times Sq-42 St", "Grand Central-42 St"]}]}, "SFR": {"name": "S", "fullName": "Franklin Av Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Franklin Av", "Park Place", "Botanic Garden", "Prospect Park"]}]}, "SRP": {"name": "S", "fullName": "Rockaway Park Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad Channel", "Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]}}};
+const DATA = {"order": ["1", "2", "3", "4", "5", "6", "7", "A", "B", "C", "D", "E", "F", "G", "J", "Z", "L", "M", "N", "Q", "R", "W", "S42", "SFR", "SRP", "SIR"], "lines": {"1": {"name": "1", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Van Cortlandt Park-242 St", "238 St", "231 St", "Marble Hill-225 St", "215 St", "207 St", "Dyckman St", "191 St", "181 St", "168 St", "157 St", "145 St", "137 St-City College", "125 St", "116 St-Columbia University", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "79 St", "72 St", "66 St-Lincoln Center", "59 St-Columbus Circle", "50 St", "Times Sq-42 St", "34 St-Penn Station", "28 St", "23 St", "18 St", "14 St", "Christopher St-Stonewall", "Houston St", "Canal St", "Franklin St", "Chambers St", "WTC Cortlandt", "Rector St", "South Ferry"]}]}, "2": {"name": "2", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Wakefield-241 St", "Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East", "E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "3": {"name": "3", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Harlem-148 St", "145 St", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "Nostrand Av", "Kingston Av", "Crown Heights-Utica Av", "Sutter Av-Rutland Rd", "Saratoga Av", "Rockaway Av", "Junius St", "Pennsylvania Av", "Van Siclen Av", "New Lots Av"]}]}, "4": {"name": "4", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Woodlawn", "Mosholu Pkwy", "Bedford Pk Blvd-Lehman College", "Kingsbridge Rd", "Fordham Rd", "183 St", "Burnside Av", "176 St", "Mt Eden Av", "170 St", "167 St", "161 St-Yankee Stadium", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "Crown Heights-Utica Av"]}]}, "5": {"name": "5", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "fork", "branches": [[{"type": "trunk", "stops": ["Eastchester-Dyre Av", "Baychester Av", "Gun Hill Rd", "Pelham Pkwy", "Morris Park"]}], [{"type": "trunk", "stops": ["Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East"]}]]}, {"type": "trunk", "stops": ["E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "6": {"name": "6", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Pelham Bay Park", "Buhre Av", "Middletown Rd", "Westchester Sq-East Tremont Av", "Zerega Av", "Castle Hill Av", "Parkchester", "St Lawrence Av", "Morrison Av-Soundview", "Elder Av", "Whitlock Av", "Hunts Point Av", "Longwood Av", "E 149 St", "E 143 St-St Mary's St", "Cypress Av", "Brook Av", "3 Av-138 St", "125 St", "116 St", "110 St", "103 St", "96 St", "86 St", "77 St", "68 St-Hunter College", "59 St", "51 St", "Grand Central-42 St", "33 St", "28 St", "23 St", "14 St-Union Sq", "Astor Pl", "Bleecker St", "Spring St", "Canal St", "Brooklyn Bridge-City Hall"]}]}, "7": {"name": "7", "color": "#B933AD", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["34 St-Hudson Yards", "Times Sq-42 St", "5 Av", "Grand Central-42 St", "Vernon Blvd-Jackson Av", "Hunters Point Av", "Court Sq", "Queensboro Plaza", "33 St-Rawson St", "40 St-Lowery St", "46 St-Bliss St", "52 St", "61 St-Woodside", "69 St", "74 St-Broadway", "82 St-Jackson Hts", "90 St-Elmhurst Av", "Junction Blvd", "103 St-Corona Plaza", "111 St", "Mets-Willets Point", "Flushing-Main St"]}]}, "A": {"name": "A", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Inwood-207 St", "Dyckman St", "190 St", "181 St", "175 St", "168 St", "145 St", "125 St", "59 St-Columbus Circle", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "14 St", "W 4 St-Washington Sq", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Nostrand Av", "Utica Av", "Broadway Junction", "Euclid Av", "Grant Av", "80 St", "88 St", "Rockaway Blvd"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["104 St", "111 St", "Ozone Park-Lefferts Blvd"]}], [{"type": "trunk", "stops": ["Aqueduct Racetrack", "Aqueduct-North Conduit Av", "Howard Beach-JFK Airport", "Broad Channel"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["Beach 67 St", "Beach 60 St", "Beach 44 St", "Beach 36 St", "Beach 25 St", "Far Rockaway-Mott Av"]}], [{"type": "trunk", "stops": ["Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]]}]]}]}, "B": {"name": "B", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Church Av", "Newkirk Plaza", "Kings Hwy", "Sheepshead Bay", "Brighton Beach"]}]}, "C": {"name": "C", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["168 St", "163 St-Amsterdam Av", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "50 St", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "23 St", "14 St", "W 4 St-Washington Sq", "Spring St", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Lafayette Av", "Clinton-Washington Avs", "Franklin Av", "Nostrand Av", "Kingston-Throop Avs", "Utica Av", "Ralph Av", "Rockaway Av", "Broadway Junction", "Liberty Av", "Van Siclen Av", "Shepherd Av", "Euclid Av"]}]}, "D": {"name": "D", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Norwood-205 St", "Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "125 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "Atlantic Av-Barclays Ctr", "36 St", "9 Av", "Fort Hamilton Pkwy", "50 St", "55 St", "62 St", "71 St", "79 St", "18 Av", "20 Av", "Bay Pkwy", "25 Av", "Bay-50 St", "Coney Island-Stillwell Av"]}]}, "E": {"name": "E", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["World Trade Center", "Canal St", "Spring St", "W 4 St-Washington Sq", "14 St", "23 St", "34 St-Penn Station", "42 St-Port Authority Bus Terminal", "50 St", "7 Av", "5 Av/53 St", "Lexington Av/53 St", "Court Sq-23 St", "Queens Plaza", "Jackson Hts-Roosevelt Av", "Forest Hills-71 Av", "75 Av", "Kew Gardens-Union Tpke", "Briarwood", "Jamaica-Van Wyck", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "F": {"name": "F", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Jamaica-179 St", "169 St", "Parsons Blvd", "Sutphin Blvd", "Briarwood", "Kew Gardens-Union Tpke", "75 Av", "Forest Hills-71 Av", "Jackson Hts-Roosevelt Av", "Queens Plaza", "Court Sq-23 St", "Lexington Av/53 St", "5 Av/53 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "2 Av", "Delancey St-Essex St", "East Broadway", "York St", "Jay St-MetroTech", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 St", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av", "Ditmas Av", "18 Av", "Avenue I", "Bay Pkwy", "Avenue N", "Avenue P", "Kings Hwy", "Avenue U", "Avenue X", "Neptune Av", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "G": {"name": "G", "color": "#6CBE45", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Court Sq", "21 St", "Greenpoint Av", "Nassau Av", "Metropolitan Av", "Broadway", "Flushing Av", "Myrtle-Willoughby Avs", "Bedford-Nostrand Avs", "Classon Av", "Clinton-Washington Avs", "Fulton St", "Hoyt-Schermerhorn", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 Sts", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av"]}]}, "J": {"name": "J", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Kosciuszko St", "Gates Av", "Halsey St", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Cleveland St", "Norwood Av", "Crescent St", "Cypress Hills", "75 St-Elderts Ln", "85 St-Forest Pkwy", "Woodhaven Blvd", "104 St", "111 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "Z": {"name": "Z", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Myrtle Av", "Gates Av", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Norwood Av", "Crescent St", "75 St-Elderts Ln", "Woodhaven Blvd", "104 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "L": {"name": "L", "color": "#A7A9AC", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["8 Av", "6 Av", "14 St-Union Sq", "3 Av", "1 Av", "Bedford Av", "Lorimer St", "Graham Av", "Grand St", "Montrose Av", "Morgan Av", "Jefferson St", "DeKalb Av", "Myrtle-Wyckoff Avs", "Halsey St", "Wilson Av", "Bushwick Av-Aberdeen St", "Broadway Junction", "Atlantic Av", "Sutter Av", "Livonia Av", "New Lots Av", "East 105 St", "Canarsie-Rockaway Pkwy"]}]}, "M": {"name": "M", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av-Newtown", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "21 St-Queensbridge", "Roosevelt Island", "Lexington Av/63 St", "57 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Central Av", "Knickerbocker Av", "Myrtle-Wyckoff Avs", "Seneca Av", "Forest Av", "Fresh Pond Rd", "Middle Village-Metropolitan Av"]}]}, "N": {"name": "N", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "Atlantic Av-Barclays Ctr", "36 St", "59 St", "8 Av", "Fort Hamilton Pkwy", "New Utrecht Av", "18 Av", "20 Av", "Bay Pkwy", "Kings Hwy", "Avenue U", "86 St", "Coney Island-Stillwell Av"]}]}, "Q": {"name": "Q", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["96 St", "86 St", "72 St", "Lexington Av/63 St", "57 St-7 Av", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Parkside Av", "Church Av", "Beverly Rd", "Cortelyou Rd", "Newkirk Plaza", "Avenue H", "Avenue J", "Avenue M", "Kings Hwy", "Avenue U", "Neck Rd", "Sheepshead Bay", "Brighton Beach", "Ocean Pkwy", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "R": {"name": "R", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "Queens Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry", "Court St", "Jay St-MetroTech", "DeKalb Av", "Atlantic Av-Barclays Ctr", "Union St", "4 Av-9 St", "Prospect Av", "25 St", "36 St", "45 St", "53 St", "59 St", "Bay Ridge Av", "77 St", "86 St", "Bay Ridge-95 St"]}]}, "W": {"name": "W", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry"]}]}, "SIR": {"name": "SIR", "fullName": "Staten Island Railway", "color": "#0078C6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["St. George", "Tompkinsville", "Stapleton", "Clifton", "Grasmere", "Old Town", "Dongan Hills", "Jefferson Avenue", "Grant City", "New Dorp", "Oakwood Heights", "Bay Terrace", "Great Kills", "Eltingville", "Annadale", "Huguenot", "Prince's Bay", "Pleasant Plains", "Richmond Valley", "Arthur Kill", "Tottenville"]}]}, "S42": {"name": "S", "fullName": "42 St Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Times Sq-42 St", "Grand Central-42 St"]}]}, "SFR": {"name": "S", "fullName": "Franklin Av Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Franklin Av", "Park Place", "Botanic Garden", "Prospect Park"]}]}, "SRP": {"name": "S", "fullName": "Rockaway Park Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad Channel", "Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]}}};
 const LINES = DATA.lines;
 const ORDER = DATA.order;
+const DISPLAY_ORDER = ["1","2","3","4","5","6","7","A","C","E","B","D","F","M","N","Q","R","W","G","L","J","Z","S42","SFR","SRP","SIR"];
 
 /* ============ fuzzy matching ============ */
 function normalize(s){
@@ -247,17 +251,10 @@ function normalize(s){
   s = s.replace(/\s+/g,' ').trim();
   return s;
 }
-function stationAliases(name){
-  const parts = name.split(/[\/\-–—()]/).map(p=>p.trim()).filter(p=>p.length>0);
-  parts.push(name);
-  const set = new Set();
-  parts.forEach(p=>{ const n = normalize(p); if(n.length>=2) set.add(n); });
-  return set;
-}
 function isCorrect(input, name){
   const n = normalize(input);
   if(!n) return false;
-  return stationAliases(name).has(n);
+  return n === normalize(name);
 }
 
 /* ============ tree flatten / render helpers ============ */
@@ -365,26 +362,15 @@ window.addEventListener('hashchange', route);
 function renderHome(){
   const grid = document.getElementById('home-line-grid');
   grid.innerHTML = '';
-  const mainLines = ORDER.filter(id=>!id.startsWith('S'));
-  mainLines.forEach(id=>{
+  DISPLAY_ORDER.forEach(id=>{
     const L = LINES[id];
+    const wrap = el('div','grid-item');
     const b = el('button','bullet',L.name);
     b.style.background = L.color; b.style.color = L.textColor;
-    b.onclick = ()=>{ location.hash = '#/line/'+id; };
-    grid.appendChild(b);
-  });
-  const shuttleRow = document.getElementById('home-shuttle-row');
-  shuttleRow.innerHTML='';
-  ['S42','SFR','SRP'].forEach(id=>{
-    const L = LINES[id];
-    const wrap = el('div','shuttle-item');
-    const b = el('button','bullet',L.name);
-    b.style.background = L.color; b.style.color = L.textColor;
-    b.style.width='48px'; b.style.height='48px'; b.style.fontSize='18px';
     b.onclick = ()=>{ location.hash = '#/line/'+id; };
     wrap.appendChild(b);
-    wrap.appendChild(el('span',null,L.fullName));
-    shuttleRow.appendChild(wrap);
+    wrap.appendChild(el('span','grid-item-label', L.fullName ? L.fullName : ''));
+    grid.appendChild(wrap);
   });
   const stats = overallStats();
   const card = document.getElementById('home-progress-card');
@@ -455,20 +441,19 @@ function startTest(lineId){
 
   testState = {
     lineId, flat, filled: new Set(), current: 0,
-    startTime: Date.now(), timer: null
+    startTime: Date.now(), timer: null, inputEl: null, inputRowIndex: null
   };
   flat.forEach((f,i)=>{
-    f.row.onclick = ()=> setCursor(i);
+    f.row.onclick = ()=>{
+      if(i !== testState.current && !testState.filled.has(i)) setCursor(i);
+    };
   });
-  const input = document.getElementById('test-input');
-  input.value=''; input.oninput = onTypeInput;
   setCursor(0);
   document.getElementById('test-end-btn').onclick = endTest;
   document.getElementById('stopwatch').textContent = '0:00';
   testState.timer = setInterval(()=>{
     document.getElementById('stopwatch').textContent = fmtTime(Date.now()-testState.startTime);
   }, 250);
-  setTimeout(()=>{ try{ input.focus(); }catch(e){} }, 300);
 }
 function buildTestSegments(segments, container, L, flat){
   segments.forEach(seg=>{
@@ -491,22 +476,41 @@ function buildTestSegments(segments, container, L, flat){
     }
   });
 }
+function mountInputAt(i){
+  // unmount existing input, restoring a blank placeholder to its old row
+  if(testState.inputEl){
+    const oldF = testState.flat[testState.inputRowIndex];
+    testState.inputEl.remove();
+    if(oldF && !testState.filled.has(testState.inputRowIndex)){
+      const blank = el('div','blank');
+      oldF.row.appendChild(blank);
+      oldF.blank = blank;
+    }
+  }
+  testState.inputEl = null; testState.inputRowIndex = null;
+  if(i >= testState.flat.length) return;
+  const f = testState.flat[i];
+  if(testState.filled.has(i)) return;
+  if(f.blank){ f.blank.remove(); f.blank = null; }
+  const input = el('input','inline-input');
+  input.type = 'text';
+  input.autocomplete = 'off'; input.autocapitalize='off'; input.autocorrect='off'; input.spellcheck=false;
+  input.placeholder = 'Type station name…';
+  input.oninput = onTypeInput;
+  f.row.appendChild(input);
+  testState.inputEl = input;
+  testState.inputRowIndex = i;
+  setTimeout(()=>{ try{ input.focus(); }catch(e){} }, 60);
+}
 function setCursor(i){
   if(!testState) return;
   testState.flat.forEach(f=>f.row.classList.remove('active'));
   testState.current = i;
+  mountInputAt(i);
   if(i < testState.flat.length){
     const f = testState.flat[i];
     f.row.classList.add('active');
     f.row.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
-  }
-  const input = document.getElementById('test-input');
-  input.value = '';
-  const hint = document.getElementById('test-hint');
-  if(i < testState.flat.length){
-    hint.textContent = 'Type the next station…';
-  } else {
-    hint.textContent = 'All stations filled!';
   }
 }
 function onTypeInput(e){
@@ -516,7 +520,6 @@ function onTypeInput(e){
   const target = testState.flat[i];
   if(isCorrect(e.target.value, target.name)){
     fillStation(i);
-    e.target.value='';
     advanceCursor();
   }
 }
@@ -525,7 +528,12 @@ function fillStation(i){
   if(testState.filled.has(i)) return;
   testState.filled.add(i);
   f.row.classList.add('filled');
-  if(f.blank){ f.blank.remove(); f.row.appendChild(el('div','name',f.name)); f.blank=null; }
+  if(testState.inputRowIndex === i && testState.inputEl){
+    testState.inputEl.remove();
+    testState.inputEl = null; testState.inputRowIndex = null;
+  }
+  if(f.blank){ f.blank.remove(); f.blank = null; }
+  f.row.appendChild(el('div','name',f.name));
 }
 function advanceCursor(){
   let n = testState.current + 1;
@@ -541,11 +549,13 @@ function finishTest(completedAll){
   if(!testState) return;
   if(testState.timer){ clearInterval(testState.timer); testState.timer=null; }
   const elapsed = Date.now() - testState.startTime;
+  if(testState.inputEl){ testState.inputEl.remove(); testState.inputEl=null; testState.inputRowIndex=null; }
   // reveal missed stations
   testState.flat.forEach((f,idx)=>{
     if(!testState.filled.has(idx)){
       f.row.classList.add('missed');
-      if(f.blank){ f.blank.remove(); f.row.appendChild(el('div','name',f.name)); f.blank=null; }
+      if(f.blank){ f.blank.remove(); f.blank=null; }
+      f.row.appendChild(el('div','name',f.name));
     }
   });
   const filledCount = testState.filled.size;
@@ -580,7 +590,7 @@ function renderProgress(){
   document.getElementById('prog-overall-sub').textContent = stats.done+' / '+stats.total+' stops memorized';
   const list = document.getElementById('prog-list');
   list.innerHTML='';
-  ORDER.forEach(id=>{
+  DISPLAY_ORDER.forEach(id=>{
     const L = LINES[id];
     const rec = getLineRecord(id);
     const total = lineStopCount(id);
@@ -606,7 +616,11 @@ function renderProgress(){
 route();
 
 /* register service worker */
-
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 
 </script>
 </body>
