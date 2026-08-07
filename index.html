@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Subway Memory</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Subway Memory">
+<meta name="theme-color" content="#0b0d12">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+
+<style>
+:root{
+  --bg:#0b0d12; --panel:#161a22; --panel2:#1e232d; --text:#f2f3f5; --muted:#9aa3b2;
+  --accent:#2dd4bf; --danger:#ff5a5f; --good:#2ecc71; --border:#2a303c;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  overscroll-behavior:none; touch-action:manipulation;
+}
+#app{position:fixed; inset:0; display:flex; flex-direction:column; padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);}
+.view{flex:1; min-height:0; display:none; flex-direction:column;}
+.view.active{display:flex;}
+
+/* ---------- top bar ---------- */
+.topbar{
+  display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border);
+  background:var(--panel); flex-shrink:0;
+}
+.topbar h1{font-size:17px; margin:0; font-weight:700; flex:1; text-align:center;}
+.iconbtn{
+  width:36px; height:36px; border-radius:10px; border:none; background:var(--panel2); color:var(--text);
+  display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
+}
+.iconbtn:active{opacity:.6;}
+.topbar .spacer{width:36px; flex-shrink:0;}
+
+/* ---------- home ---------- */
+.home-scroll{flex:1; overflow-y:auto; padding:16px; -webkit-overflow-scrolling:touch;}
+.home-title{font-size:26px; font-weight:800; margin:6px 0 18px;}
+.line-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(56px,1fr)); gap:12px; margin-bottom:26px;}
+.bullet{
+  width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:22px; border:none; cursor:pointer; margin:0 auto;
+}
+.bullet:active{transform:scale(.93);}
+.section-label{font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 10px;}
+.shuttle-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:20px;}
+.shuttle-item{display:flex; flex-direction:column; align-items:center; gap:6px; width:80px;}
+.shuttle-item span{font-size:12px; color:var(--muted); text-align:center;}
+.progress-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:22px;
+  display:flex; align-items:center; gap:14px; cursor:pointer;
+}
+.progress-card .ring{width:52px; height:52px; border-radius:50%; flex-shrink:0;}
+.progress-card .pc-text{flex:1;}
+.progress-card .pc-title{font-weight:700; font-size:15px;}
+.progress-card .pc-sub{color:var(--muted); font-size:13px; margin-top:2px;}
+
+/* ---------- line view ---------- */
+.line-scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 0 100px;}
+.trunk-col{display:flex; flex-direction:column; align-items:stretch;}
+.fork-row{display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity; gap:0; width:100%;}
+.branch-col{display:flex; flex-direction:column; flex:0 0 88%; max-width:420px; scroll-snap-align:start; padding:0 14px; border-left:2px dashed var(--border); margin-left:8px;}
+.fork-row .branch-col:first-child{border-left:2px dashed var(--border);}
+.fork-hint{font-size:11px; color:var(--muted); text-align:center; padding:4px 0 10px; letter-spacing:.04em;}
+
+.station-row{
+  display:flex; align-items:center; gap:12px; padding:10px 18px; min-height:44px; position:relative; cursor:pointer;
+}
+.station-row .dot{width:14px; height:14px; border-radius:50%; flex-shrink:0; border:3px solid var(--bg); box-shadow:0 0 0 1.5px currentColor;}
+.station-row .line{position:absolute; left:24px; top:-2px; bottom:-2px; width:3px; z-index:0;}
+.station-row .name{font-size:15.5px; font-weight:600; flex:1; z-index:1;}
+.station-row .blank{flex:1; height:2px; border-radius:2px; background:var(--border); margin-right:6px;}
+.station-row.filled .name{color:var(--good);}
+.station-row.missed .name{color:var(--danger);}
+.station-row.active{background:rgba(45,212,191,.12); border-radius:10px;}
+.station-row.active .name, .station-row.active .blank{outline:none;}
+
+.bottombar{
+  position:absolute; left:0; right:0; bottom:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top, var(--bg) 60%, transparent); display:flex; justify-content:center;
+}
+.testbtn{
+  background:var(--accent); color:#04201c; border:none; border-radius:999px; padding:14px 40px; font-size:17px;
+  font-weight:800; box-shadow:0 6px 20px rgba(45,212,191,.35);
+}
+.testbtn:active{transform:scale(.96);}
+
+/* ---------- test mode ---------- */
+.test-header{padding:10px 14px 4px; display:flex; align-items:center; gap:10px; flex-shrink:0;}
+.stopwatch{font-variant-numeric:tabular-nums; font-size:20px; font-weight:800; letter-spacing:.02em;}
+.test-header .grow{flex:1;}
+.endbtn{background:var(--danger); color:#fff; border:none; border-radius:999px; padding:9px 18px; font-weight:700; font-size:14px;}
+.endbtn:active{opacity:.7;}
+.typebar{
+  padding:8px 14px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); background:var(--panel);
+  display:flex; align-items:center; gap:10px; flex-shrink:0;
+}
+.typebar input{
+  flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:12px; color:var(--text);
+  padding:12px 14px; font-size:16px; outline:none;
+}
+.typebar input:focus{border-color:var(--accent);}
+.typebar .target-hint{font-size:12px; color:var(--muted); padding:0 14px 6px;}
+
+/* ---------- overlay ---------- */
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:50; padding:24px;}
+.overlay.active{display:flex;}
+.overlay-card{background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:26px 22px; max-width:340px; width:100%; text-align:center;}
+.overlay-card .emoji{font-size:40px; margin-bottom:8px;}
+.overlay-card h2{margin:0 0 6px; font-size:20px;}
+.overlay-card .stat{font-size:15px; color:var(--muted); margin:4px 0;}
+.overlay-card .stat b{color:var(--text);}
+.overlay-card .actions{display:flex; gap:10px; margin-top:18px;}
+.overlay-card button{flex:1; padding:12px; border-radius:12px; border:none; font-weight:700; font-size:14px;}
+.btn-primary{background:var(--accent); color:#04201c;}
+.btn-secondary{background:var(--panel2); color:var(--text);}
+
+/* ---------- progress ---------- */
+.progress-scroll{flex:1; overflow-y:auto; padding:16px; -webkit-overflow-scrolling:touch;}
+.overall-box{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center; margin-bottom:20px;}
+.overall-box .big{font-size:38px; font-weight:800; color:var(--accent);}
+.overall-box .lbl{color:var(--muted); font-size:13px; margin-top:4px;}
+.pl-row{display:flex; align-items:center; gap:12px; padding:12px 6px; border-bottom:1px solid var(--border);}
+.pl-row .bullet{width:38px; height:38px; font-size:15px;}
+.pl-row .pl-info{flex:1;}
+.pl-row .pl-name{font-weight:700; font-size:14.5px;}
+.pl-row .pl-sub{color:var(--muted); font-size:12.5px; margin-top:2px;}
+.pl-row .pl-status{font-size:12px; padding:5px 10px; border-radius:999px; background:var(--panel2); color:var(--muted); flex-shrink:0;}
+.pl-row .pl-status.done{background:rgba(46,204,113,.18); color:var(--good);}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <div class="topbar"><div class="spacer"></div><h1>NYC Subway Memory</h1><div class="spacer"></div></div>
+    <div class="home-scroll">
+      <div class="progress-card" id="home-progress-card">
+        <div class="ring" id="home-progress-ring"></div>
+        <div class="pc-text">
+          <div class="pc-title" id="home-progress-pct">0%</div>
+          <div class="pc-sub">of all stops memorized — tap for details</div>
+        </div>
+      </div>
+      <div class="section-label">Lines</div>
+      <div class="line-grid" id="home-line-grid"></div>
+      <div class="section-label">Shuttles</div>
+      <div class="shuttle-row" id="home-shuttle-row"></div>
+    </div>
+  </div>
+
+  <!-- LINE BROWSE -->
+  <div class="view" id="view-line" style="position:relative;">
+    <div class="topbar">
+      <button class="iconbtn" onclick="history.back()">‹</button>
+      <h1 id="line-title">Line</h1>
+      <button class="iconbtn" onclick="location.hash='#/'">⌂</button>
+    </div>
+    <div class="line-scroll" id="line-scroll"></div>
+    <div class="bottombar"><button class="testbtn" id="line-test-btn">Test ▸</button></div>
+  </div>
+
+  <!-- TEST MODE -->
+  <div class="view" id="view-test">
+    <div class="test-header">
+      <button class="iconbtn" onclick="location.hash='#/'">⌂</button>
+      <div class="stopwatch" id="stopwatch">0:00</div>
+      <div class="grow" id="test-title" style="text-align:center; font-weight:700; font-size:14px;"></div>
+      <button class="endbtn" id="test-end-btn">End</button>
+    </div>
+    <div class="line-scroll" id="test-scroll" style="padding-bottom:20px;"></div>
+    <div class="typebar-wrap">
+      <div class="target-hint" id="test-hint">Type the next station…</div>
+      <div class="typebar">
+        <input id="test-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type station name…">
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="view" id="view-progress">
+    <div class="topbar">
+      <button class="iconbtn" onclick="location.hash='#/'">‹</button>
+      <h1>Progress</h1>
+      <div class="spacer"></div>
+    </div>
+    <div class="progress-scroll">
+      <div class="overall-box">
+        <div class="big" id="prog-overall-pct">0%</div>
+        <div class="lbl" id="prog-overall-sub">0 / 0 stops memorized</div>
+      </div>
+      <div id="prog-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- END OVERLAY -->
+<div class="overlay" id="end-overlay">
+  <div class="overlay-card">
+    <div class="emoji" id="eo-emoji">🎉</div>
+    <h2 id="eo-title">Nice work!</h2>
+    <div class="stat" id="eo-time"></div>
+    <div class="stat" id="eo-pct"></div>
+    <div class="actions">
+      <button class="btn-secondary" id="eo-done">Done</button>
+      <button class="btn-primary" id="eo-retry">Redo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const DATA = {"order": ["1", "2", "3", "4", "5", "6", "7", "A", "B", "C", "D", "E", "F", "G", "J", "Z", "L", "M", "N", "Q", "R", "W", "S42", "SFR", "SRP"], "lines": {"1": {"name": "1", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Van Cortlandt Park-242 St", "238 St", "231 St", "Marble Hill-225 St", "215 St", "207 St", "Dyckman St", "191 St", "181 St", "168 St", "157 St", "145 St", "137 St-City College", "125 St", "116 St-Columbia University", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "79 St", "72 St", "66 St-Lincoln Center", "59 St-Columbus Circle", "50 St", "Times Sq-42 St", "34 St-Penn Station", "28 St", "23 St", "18 St", "14 St", "Christopher St-Stonewall", "Houston St", "Canal St", "Franklin St", "Chambers St", "WTC Cortlandt", "Rector St", "South Ferry"]}]}, "2": {"name": "2", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Wakefield-241 St", "Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East", "E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "3": {"name": "3", "color": "#EE352E", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Harlem-148 St", "145 St", "135 St", "125 St", "116 St", "110 St-Malcolm X Plaza", "96 St", "72 St", "Times Sq-42 St", "34 St-Penn Station", "14 St", "Chambers St", "Park Place", "Fulton St", "Wall St", "Clark St", "Borough Hall", "Hoyt St", "Nevins St", "Atlantic Av-Barclays Ctr", "Bergen St", "Grand Army Plaza", "Eastern Pkwy-Brooklyn Museum", "Franklin Av-Medgar Evers College", "Nostrand Av", "Kingston Av", "Crown Heights-Utica Av", "Sutter Av-Rutland Rd", "Saratoga Av", "Rockaway Av", "Junius St", "Pennsylvania Av", "Van Siclen Av", "New Lots Av"]}]}, "4": {"name": "4", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Woodlawn", "Mosholu Pkwy", "Bedford Pk Blvd-Lehman College", "Kingsbridge Rd", "Fordham Rd", "183 St", "Burnside Av", "176 St", "Mt Eden Av", "170 St", "167 St", "161 St-Yankee Stadium", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "Crown Heights-Utica Av"]}]}, "5": {"name": "5", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "fork", "branches": [[{"type": "trunk", "stops": ["Eastchester-Dyre Av", "Baychester Av", "Gun Hill Rd", "Pelham Pkwy", "Morris Park"]}], [{"type": "trunk", "stops": ["Nereid Av", "233 St", "225 St", "219 St", "Gun Hill Rd", "Burke Av", "Allerton Av", "Pelham Pkwy", "Bronx Park East"]}]]}, {"type": "trunk", "stops": ["E 180 St", "West Farms Sq-E Tremont Av", "174 St", "Freeman St", "Simpson St", "Intervale Av", "Prospect Av", "Jackson Av", "3 Av-149 St", "149 St-Grand Concourse", "138 St-Grand Concourse", "125 St", "86 St", "59 St", "Grand Central-42 St", "14 St-Union Sq", "Brooklyn Bridge-City Hall", "Fulton St", "Wall St", "Bowling Green", "Borough Hall", "Nevins St", "Atlantic Av-Barclays Ctr", "Franklin Av-Medgar Evers College", "President St-Medgar Evers College", "Sterling St", "Winthrop St", "Church Av", "Beverly Rd", "Newkirk Av-Little Haiti", "Flatbush Av-Brooklyn College"]}]}, "6": {"name": "6", "color": "#00933C", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Pelham Bay Park", "Buhre Av", "Middletown Rd", "Westchester Sq-East Tremont Av", "Zerega Av", "Castle Hill Av", "Parkchester", "St Lawrence Av", "Morrison Av-Soundview", "Elder Av", "Whitlock Av", "Hunts Point Av", "Longwood Av", "E 149 St", "E 143 St-St Mary's St", "Cypress Av", "Brook Av", "3 Av-138 St", "125 St", "116 St", "110 St", "103 St", "96 St", "86 St", "77 St", "68 St-Hunter College", "59 St", "51 St", "Grand Central-42 St", "33 St", "28 St", "23 St", "14 St-Union Sq", "Astor Pl", "Bleecker St", "Spring St", "Canal St", "Brooklyn Bridge-City Hall"]}]}, "7": {"name": "7", "color": "#B933AD", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["34 St-Hudson Yards", "Times Sq-42 St", "5 Av", "Grand Central-42 St", "Vernon Blvd-Jackson Av", "Hunters Point Av", "Court Sq", "Queensboro Plaza", "33 St-Rawson St", "40 St-Lowery St", "46 St-Bliss St", "52 St", "61 St-Woodside", "69 St", "74 St-Broadway", "82 St-Jackson Hts", "90 St-Elmhurst Av", "Junction Blvd", "103 St-Corona Plaza", "111 St", "Mets-Willets Point", "Flushing-Main St"]}]}, "A": {"name": "A", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Inwood-207 St", "Dyckman St", "190 St", "181 St", "175 St", "168 St", "145 St", "125 St", "59 St-Columbus Circle", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "14 St", "W 4 St-Washington Sq", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Nostrand Av", "Utica Av", "Broadway Junction", "Euclid Av", "Grant Av", "80 St", "88 St", "Rockaway Blvd"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["104 St", "111 St", "Ozone Park-Lefferts Blvd"]}], [{"type": "trunk", "stops": ["Aqueduct Racetrack", "Aqueduct-North Conduit Av", "Howard Beach-JFK Airport", "Broad Channel"]}, {"type": "fork", "branches": [[{"type": "trunk", "stops": ["Beach 67 St", "Beach 60 St", "Beach 44 St", "Beach 36 St", "Beach 25 St", "Far Rockaway-Mott Av"]}], [{"type": "trunk", "stops": ["Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]]}]]}]}, "B": {"name": "B", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Church Av", "Newkirk Plaza", "Kings Hwy", "Sheepshead Bay", "Brighton Beach"]}]}, "C": {"name": "C", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["168 St", "163 St-Amsterdam Av", "155 St", "145 St", "135 St", "125 St", "116 St", "Cathedral Pkwy (110 St)", "103 St", "96 St", "86 St", "81 St-Museum of Natural History", "72 St", "59 St-Columbus Circle", "50 St", "42 St-Port Authority Bus Terminal", "34 St-Penn Station", "23 St", "14 St", "W 4 St-Washington Sq", "Spring St", "Canal St", "Chambers St", "Fulton St", "High St", "Jay St-MetroTech", "Hoyt-Schermerhorn", "Lafayette Av", "Clinton-Washington Avs", "Franklin Av", "Nostrand Av", "Kingston-Throop Avs", "Utica Av", "Ralph Av", "Rockaway Av", "Broadway Junction", "Liberty Av", "Van Siclen Av", "Shepherd Av", "Euclid Av"]}]}, "D": {"name": "D", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Norwood-205 St", "Bedford Park Blvd", "Kingsbridge Rd", "Fordham Rd", "182-183 Sts", "Tremont Av", "174-175 Sts", "170 St", "167 St", "161 St-Yankee Stadium", "155 St", "145 St", "125 St", "59 St-Columbus Circle", "7 Av", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Grand St", "Atlantic Av-Barclays Ctr", "36 St", "9 Av", "Fort Hamilton Pkwy", "50 St", "55 St", "62 St", "71 St", "79 St", "18 Av", "20 Av", "Bay Pkwy", "25 Av", "Bay-50 St", "Coney Island-Stillwell Av"]}]}, "E": {"name": "E", "color": "#0039A6", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["World Trade Center", "Canal St", "Spring St", "W 4 St-Washington Sq", "14 St", "23 St", "34 St-Penn Station", "42 St-Port Authority Bus Terminal", "50 St", "7 Av", "5 Av/53 St", "Lexington Av/53 St", "Court Sq-23 St", "Queens Plaza", "Jackson Hts-Roosevelt Av", "Forest Hills-71 Av", "75 Av", "Kew Gardens-Union Tpke", "Briarwood", "Jamaica-Van Wyck", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "F": {"name": "F", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Jamaica-179 St", "169 St", "Parsons Blvd", "Sutphin Blvd", "Briarwood", "Kew Gardens-Union Tpke", "75 Av", "Forest Hills-71 Av", "Jackson Hts-Roosevelt Av", "Queens Plaza", "Court Sq-23 St", "Lexington Av/53 St", "5 Av/53 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "2 Av", "Delancey St-Essex St", "East Broadway", "York St", "Jay St-MetroTech", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 St", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av", "Ditmas Av", "18 Av", "Avenue I", "Bay Pkwy", "Avenue N", "Avenue P", "Kings Hwy", "Avenue U", "Avenue X", "Neptune Av", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "G": {"name": "G", "color": "#6CBE45", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Court Sq", "21 St", "Greenpoint Av", "Nassau Av", "Metropolitan Av", "Broadway", "Flushing Av", "Myrtle-Willoughby Avs", "Bedford-Nostrand Avs", "Classon Av", "Clinton-Washington Avs", "Fulton St", "Hoyt-Schermerhorn", "Bergen St", "Carroll St", "Smith-9 Sts", "4 Av-9 Sts", "7 Av", "15 St-Prospect Park", "Fort Hamilton Pkwy", "Church Av"]}]}, "J": {"name": "J", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Kosciuszko St", "Gates Av", "Halsey St", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Cleveland St", "Norwood Av", "Crescent St", "Cypress Hills", "75 St-Elderts Ln", "85 St-Forest Pkwy", "Woodhaven Blvd", "104 St", "111 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "Z": {"name": "Z", "color": "#996633", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad St", "Fulton St", "Chambers St", "Canal St", "Bowery", "Delancey St-Essex St", "Marcy Av", "Myrtle Av", "Gates Av", "Chauncey St", "Broadway Junction", "Alabama Av", "Van Siclen Av", "Norwood Av", "Crescent St", "75 St-Elderts Ln", "Woodhaven Blvd", "104 St", "121 St", "Sutphin Blvd-Archer Av-JFK Airport", "Jamaica Center-Parsons/Archer"]}]}, "L": {"name": "L", "color": "#A7A9AC", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["8 Av", "6 Av", "14 St-Union Sq", "3 Av", "1 Av", "Bedford Av", "Lorimer St", "Graham Av", "Grand St", "Montrose Av", "Morgan Av", "Jefferson St", "DeKalb Av", "Myrtle-Wyckoff Avs", "Halsey St", "Wilson Av", "Bushwick Av-Aberdeen St", "Broadway Junction", "Atlantic Av", "Sutter Av", "Livonia Av", "New Lots Av", "East 105 St", "Canarsie-Rockaway Pkwy"]}]}, "M": {"name": "M", "color": "#FF6319", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av-Newtown", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "21 St-Queensbridge", "Roosevelt Island", "Lexington Av/63 St", "57 St", "47-50 Sts-Rockefeller Ctr", "42 St-Bryant Pk", "34 St-Herald Sq", "23 St", "14 St", "W 4 St-Washington Sq", "Broadway-Lafayette St", "Delancey St-Essex St", "Marcy Av", "Hewes St", "Lorimer St", "Flushing Av", "Myrtle Av", "Central Av", "Knickerbocker Av", "Myrtle-Wyckoff Avs", "Seneca Av", "Forest Av", "Fresh Pond Rd", "Middle Village-Metropolitan Av"]}]}, "N": {"name": "N", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "Atlantic Av-Barclays Ctr", "36 St", "59 St", "8 Av", "Fort Hamilton Pkwy", "New Utrecht Av", "18 Av", "20 Av", "Bay Pkwy", "Kings Hwy", "Avenue U", "86 St", "Coney Island-Stillwell Av"]}]}, "Q": {"name": "Q", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["96 St", "86 St", "72 St", "Lexington Av/63 St", "57 St-7 Av", "Times Sq-42 St", "34 St-Herald Sq", "14 St-Union Sq", "Canal St", "DeKalb Av", "Atlantic Av-Barclays Ctr", "7 Av", "Prospect Park", "Parkside Av", "Church Av", "Beverly Rd", "Cortelyou Rd", "Newkirk Plaza", "Avenue H", "Avenue J", "Avenue M", "Kings Hwy", "Avenue U", "Neck Rd", "Sheepshead Bay", "Brighton Beach", "Ocean Pkwy", "W 8 St-NY Aquarium", "Coney Island-Stillwell Av"]}]}, "R": {"name": "R", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Forest Hills-71 Av", "67 Av", "63 Dr-Rego Park", "Woodhaven Blvd", "Grand Av", "Elmhurst Av", "Jackson Hts-Roosevelt Av", "65 St", "Northern Blvd", "46 St", "Steinway St", "36 St", "Queens Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry", "Court St", "Jay St-MetroTech", "DeKalb Av", "Atlantic Av-Barclays Ctr", "Union St", "4 Av-9 St", "Prospect Av", "25 St", "36 St", "45 St", "53 St", "59 St", "Bay Ridge Av", "77 St", "86 St", "Bay Ridge-95 St"]}]}, "W": {"name": "W", "color": "#FCCC0A", "textColor": "#000000", "segments": [{"type": "trunk", "stops": ["Astoria-Ditmars Blvd", "Astoria Blvd", "30 Av", "Broadway", "36 Av", "39 Av", "Queensboro Plaza", "Lexington Av/59 St", "5 Av/59 St", "57 St-7 Av", "49 St", "Times Sq-42 St", "34 St-Herald Sq", "28 St", "23 St", "14 St-Union Sq", "8 St-NYU", "Prince St", "Canal St", "City Hall", "Cortlandt St", "Rector St", "Whitehall St-South Ferry"]}]}, "S42": {"name": "S", "fullName": "42 St Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Times Sq-42 St", "Grand Central-42 St"]}]}, "SFR": {"name": "S", "fullName": "Franklin Av Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Franklin Av", "Park Place", "Botanic Garden", "Prospect Park"]}]}, "SRP": {"name": "S", "fullName": "Rockaway Park Shuttle", "color": "#808183", "textColor": "#FFFFFF", "segments": [{"type": "trunk", "stops": ["Broad Channel", "Beach 90 St", "Beach 98 St", "Beach 105 St", "Rockaway Park-Beach 116 St"]}]}}};
+const LINES = DATA.lines;
+const ORDER = DATA.order;
+
+/* ============ fuzzy matching ============ */
+function normalize(s){
+  if(!s) return '';
+  s = s.toLowerCase();
+  s = s.replace(/(\d+)(st|nd|rd|th)\b/g, '$1');
+  s = s.replace(/[\/\-–—(),.'’]/g, ' ');
+  s = s.replace(/\beast\b/g,'e').replace(/\bwest\b/g,'w').replace(/\bnorth\b/g,'n').replace(/\bsouth\b/g,'s');
+  s = s.replace(/\bavenues\b/g,'avs').replace(/\bavenue\b/g,'av').replace(/\bave\b/g,'av');
+  s = s.replace(/\bstreets\b/g,'sts').replace(/\bstreet\b/g,'st');
+  s = s.replace(/\bboulevard\b/g,'blvd');
+  s = s.replace(/\bsquare\b/g,'sq');
+  s = s.replace(/\bparkway\b/g,'pkwy');
+  s = s.replace(/\bplace\b/g,'pl');
+  s = s.replace(/\broad\b/g,'rd');
+  s = s.replace(/\bdrive\b/g,'dr');
+  s = s.replace(/\bheights\b/g,'hts');
+  s = s.replace(/\bcentre\b/g,'ctr').replace(/\bcenter\b/g,'ctr');
+  s = s.replace(/\bterminal\b/g,'term');
+  s = s.replace(/\bjunction\b/g,'jct');
+  s = s.replace(/\bfort\b/g,'ft');
+  s = s.replace(/\bmount\b/g,'mt');
+  s = s.replace(/\s+/g,' ').trim();
+  return s;
+}
+function stationAliases(name){
+  const parts = name.split(/[\/\-–—()]/).map(p=>p.trim()).filter(p=>p.length>0);
+  parts.push(name);
+  const set = new Set();
+  parts.forEach(p=>{ const n = normalize(p); if(n.length>=2) set.add(n); });
+  return set;
+}
+function isCorrect(input, name){
+  const n = normalize(input);
+  if(!n) return false;
+  return stationAliases(name).has(n);
+}
+
+/* ============ tree flatten / render helpers ============ */
+function forEachStop(segments, cb){
+  segments.forEach(seg=>{
+    if(seg.type==='trunk'){ seg.stops.forEach(s=>cb(s)); }
+    else { seg.branches.forEach(b=> forEachStop(b, cb)); }
+  });
+}
+function lineStopCount(lineId){
+  let n=0; forEachStop(LINES[lineId].segments, ()=>n++); return n;
+}
+
+/* ============ progress storage ============ */
+const PROG_KEY = 'subwayMemProgress_v1';
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveProgress(p){ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }
+function getLineRecord(lineId){
+  const p = loadProgress();
+  return p[lineId] || {completed:false, bestTime:null, bestFilled:0};
+}
+function updateLineRecord(lineId, filledCount, totalCount, elapsedMs){
+  const p = loadProgress();
+  const rec = p[lineId] || {completed:false, bestTime:null, bestFilled:0};
+  if(filledCount >= totalCount){
+    rec.completed = true;
+    if(rec.bestTime===null || elapsedMs < rec.bestTime) rec.bestTime = elapsedMs;
+    rec.bestFilled = totalCount;
+  } else {
+    if(filledCount > rec.bestFilled) rec.bestFilled = filledCount;
+  }
+  p[lineId] = rec;
+  saveProgress(p);
+  return rec;
+}
+function overallStats(){
+  const p = loadProgress();
+  let total=0, done=0;
+  ORDER.forEach(id=>{
+    const c = lineStopCount(id);
+    total += c;
+    if(p[id] && p[id].completed) done += c;
+  });
+  return {done, total, pct: total? Math.round(done/total*100):0};
+}
+
+/* ============ formatting ============ */
+function fmtTime(ms){
+  const totalSec = Math.floor(ms/1000);
+  const m = Math.floor(totalSec/60);
+  const s = totalSec%60;
+  return m + ':' + String(s).padStart(2,'0');
+}
+function lineLabel(lineId){
+  const L = LINES[lineId];
+  return L.fullName ? (L.name+' — '+L.fullName) : (L.name+' Train');
+}
+
+/* ============ app state / router ============ */
+const appEl = document.getElementById('app');
+let testState = null; // {lineId, flat:[{name,el}], filled:Set, current:idx, startTime, timer}
+
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text!==undefined) e.textContent = text;
+  return e;
+}
+
+function route(){
+  const hash = location.hash || '#/';
+  stopTimerIfLeavingTest(hash);
+  const views = document.querySelectorAll('.view');
+  views.forEach(v=>v.classList.remove('active'));
+  if(hash === '#/' || hash===''){
+    document.getElementById('view-home').classList.add('active');
+    renderHome();
+  } else if(hash.startsWith('#/line/')){
+    const id = decodeURIComponent(hash.slice(7));
+    document.getElementById('view-line').classList.add('active');
+    renderLineBrowse(id);
+  } else if(hash.startsWith('#/test/')){
+    const id = decodeURIComponent(hash.slice(7));
+    document.getElementById('view-test').classList.add('active');
+    startTest(id);
+  } else if(hash === '#/progress'){
+    document.getElementById('view-progress').classList.add('active');
+    renderProgress();
+  } else {
+    document.getElementById('view-home').classList.add('active');
+    renderHome();
+  }
+}
+function stopTimerIfLeavingTest(newHash){
+  if(testState && testState.timer && !newHash.startsWith('#/test/')){
+    clearInterval(testState.timer);
+    testState.timer = null;
+  }
+}
+window.addEventListener('hashchange', route);
+
+/* ============ HOME ============ */
+function renderHome(){
+  const grid = document.getElementById('home-line-grid');
+  grid.innerHTML = '';
+  const mainLines = ORDER.filter(id=>!id.startsWith('S'));
+  mainLines.forEach(id=>{
+    const L = LINES[id];
+    const b = el('button','bullet',L.name);
+    b.style.background = L.color; b.style.color = L.textColor;
+    b.onclick = ()=>{ location.hash = '#/line/'+id; };
+    grid.appendChild(b);
+  });
+  const shuttleRow = document.getElementById('home-shuttle-row');
+  shuttleRow.innerHTML='';
+  ['S42','SFR','SRP'].forEach(id=>{
+    const L = LINES[id];
+    const wrap = el('div','shuttle-item');
+    const b = el('button','bullet',L.name);
+    b.style.background = L.color; b.style.color = L.textColor;
+    b.style.width='48px'; b.style.height='48px'; b.style.fontSize='18px';
+    b.onclick = ()=>{ location.hash = '#/line/'+id; };
+    wrap.appendChild(b);
+    wrap.appendChild(el('span',null,L.fullName));
+    shuttleRow.appendChild(wrap);
+  });
+  const stats = overallStats();
+  const card = document.getElementById('home-progress-card');
+  card.onclick = ()=>{ location.hash='#/progress'; };
+  document.getElementById('home-progress-pct').textContent = stats.pct+'%';
+  document.getElementById('home-progress-ring').style.background =
+    `conic-gradient(var(--accent) ${stats.pct*3.6}deg, var(--panel2) 0deg)`;
+}
+
+/* ============ LINE BROWSE ============ */
+let currentLineId = null;
+function renderLineBrowse(lineId){
+  currentLineId = lineId;
+  const L = LINES[lineId];
+  document.getElementById('line-title').textContent = lineLabel(lineId);
+  const scroll = document.getElementById('line-scroll');
+  scroll.innerHTML = '';
+  const root = el('div','trunk-col');
+  buildBrowseSegments(L.segments, root, L);
+  scroll.appendChild(root);
+  document.getElementById('line-test-btn').onclick = ()=>{ location.hash = '#/test/'+lineId; };
+}
+function buildBrowseSegments(segments, container, L){
+  segments.forEach(seg=>{
+    if(seg.type==='trunk'){
+      seg.stops.forEach(name=>{
+        container.appendChild(makeStationRow(name, L, false));
+      });
+    } else {
+      const hint = el('div','fork-hint','⟷ swipe to see other branches');
+      container.appendChild(hint);
+      const forkRow = el('div','fork-row');
+      seg.branches.forEach(branchSegs=>{
+        const col = el('div','branch-col');
+        buildBrowseSegments(branchSegs, col, L);
+        forkRow.appendChild(col);
+      });
+      container.appendChild(forkRow);
+    }
+  });
+}
+function makeStationRow(name, L, testMode){
+  const row = el('div','station-row');
+  const bar = el('div',null); bar.className='line'; bar.style.background = L.color; bar.style.color = L.color;
+  const dot = el('div','dot'); dot.style.background = L.color; dot.style.color = L.color;
+  row.appendChild(bar); row.appendChild(dot);
+  if(testMode){
+    const blank = el('div','blank');
+    row.appendChild(blank);
+    row._blank = blank;
+  } else {
+    row.appendChild(el('div','name',name));
+  }
+  return row;
+}
+
+/* ============ TEST MODE ============ */
+function startTest(lineId){
+  if(testState && testState.timer) clearInterval(testState.timer);
+  const L = LINES[lineId];
+  document.getElementById('test-title').textContent = lineLabel(lineId);
+  const scroll = document.getElementById('test-scroll');
+  scroll.innerHTML = '';
+  const flat = [];
+  const root = el('div','trunk-col');
+  buildTestSegments(L.segments, root, L, flat);
+  scroll.appendChild(root);
+
+  testState = {
+    lineId, flat, filled: new Set(), current: 0,
+    startTime: Date.now(), timer: null
+  };
+  flat.forEach((f,i)=>{
+    f.row.onclick = ()=> setCursor(i);
+  });
+  const input = document.getElementById('test-input');
+  input.value=''; input.oninput = onTypeInput;
+  setCursor(0);
+  document.getElementById('test-end-btn').onclick = endTest;
+  document.getElementById('stopwatch').textContent = '0:00';
+  testState.timer = setInterval(()=>{
+    document.getElementById('stopwatch').textContent = fmtTime(Date.now()-testState.startTime);
+  }, 250);
+  setTimeout(()=>{ try{ input.focus(); }catch(e){} }, 300);
+}
+function buildTestSegments(segments, container, L, flat){
+  segments.forEach(seg=>{
+    if(seg.type==='trunk'){
+      seg.stops.forEach(name=>{
+        const row = makeStationRow(name, L, true);
+        container.appendChild(row);
+        flat.push({name, row, blank:row._blank});
+      });
+    } else {
+      const hint = el('div','fork-hint','⟷ swipe to see other branches');
+      container.appendChild(hint);
+      const forkRow = el('div','fork-row');
+      seg.branches.forEach(branchSegs=>{
+        const col = el('div','branch-col');
+        buildTestSegments(branchSegs, col, L, flat);
+        forkRow.appendChild(col);
+      });
+      container.appendChild(forkRow);
+    }
+  });
+}
+function setCursor(i){
+  if(!testState) return;
+  testState.flat.forEach(f=>f.row.classList.remove('active'));
+  testState.current = i;
+  if(i < testState.flat.length){
+    const f = testState.flat[i];
+    f.row.classList.add('active');
+    f.row.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
+  }
+  const input = document.getElementById('test-input');
+  input.value = '';
+  const hint = document.getElementById('test-hint');
+  if(i < testState.flat.length){
+    hint.textContent = 'Type the next station…';
+  } else {
+    hint.textContent = 'All stations filled!';
+  }
+}
+function onTypeInput(e){
+  if(!testState) return;
+  const i = testState.current;
+  if(i>=testState.flat.length) return;
+  const target = testState.flat[i];
+  if(isCorrect(e.target.value, target.name)){
+    fillStation(i);
+    e.target.value='';
+    advanceCursor();
+  }
+}
+function fillStation(i){
+  const f = testState.flat[i];
+  if(testState.filled.has(i)) return;
+  testState.filled.add(i);
+  f.row.classList.add('filled');
+  if(f.blank){ f.blank.remove(); f.row.appendChild(el('div','name',f.name)); f.blank=null; }
+}
+function advanceCursor(){
+  let n = testState.current + 1;
+  while(n < testState.flat.length && testState.filled.has(n)) n++;
+  if(n >= testState.flat.length && testState.filled.size >= testState.flat.length){
+    finishTest(true);
+    return;
+  }
+  setCursor(Math.min(n, testState.flat.length));
+}
+function endTest(){ finishTest(false); }
+function finishTest(completedAll){
+  if(!testState) return;
+  if(testState.timer){ clearInterval(testState.timer); testState.timer=null; }
+  const elapsed = Date.now() - testState.startTime;
+  // reveal missed stations
+  testState.flat.forEach((f,idx)=>{
+    if(!testState.filled.has(idx)){
+      f.row.classList.add('missed');
+      if(f.blank){ f.blank.remove(); f.row.appendChild(el('div','name',f.name)); f.blank=null; }
+    }
+  });
+  const filledCount = testState.filled.size;
+  const total = testState.flat.length;
+  const rec = updateLineRecord(testState.lineId, filledCount, total, elapsed);
+  const pct = Math.round(filledCount/total*100);
+  showEndOverlay(completedAll, filledCount, total, pct, elapsed, rec);
+}
+function showEndOverlay(completedAll, filledCount, total, pct, elapsed, rec){
+  const overlay = document.getElementById('end-overlay');
+  document.getElementById('eo-emoji').textContent = completedAll ? '🎉' : '⏱️';
+  document.getElementById('eo-title').textContent = completedAll
+    ? ('You memorized the '+LINES[testState.lineId].name+' train!')
+    : 'Round ended';
+  document.getElementById('eo-time').innerHTML = 'Time: <b>'+fmtTime(elapsed)+'</b>';
+  document.getElementById('eo-pct').innerHTML = 'Completed: <b>'+filledCount+' / '+total+' ('+pct+'%)</b>';
+  overlay.classList.add('active');
+  document.getElementById('eo-done').onclick = ()=>{
+    overlay.classList.remove('active');
+    location.hash = '#/line/'+testState.lineId;
+  };
+  document.getElementById('eo-retry').onclick = ()=>{
+    overlay.classList.remove('active');
+    startTest(testState.lineId);
+  };
+}
+
+/* ============ PROGRESS ============ */
+function renderProgress(){
+  const stats = overallStats();
+  document.getElementById('prog-overall-pct').textContent = stats.pct+'%';
+  document.getElementById('prog-overall-sub').textContent = stats.done+' / '+stats.total+' stops memorized';
+  const list = document.getElementById('prog-list');
+  list.innerHTML='';
+  ORDER.forEach(id=>{
+    const L = LINES[id];
+    const rec = getLineRecord(id);
+    const total = lineStopCount(id);
+    const row = el('div','pl-row');
+    const b = el('div','bullet',L.name);
+    b.style.background=L.color; b.style.color=L.textColor;
+    row.appendChild(b);
+    const info = el('div','pl-info');
+    info.appendChild(el('div','pl-name', L.fullName ? (L.name+' · '+L.fullName) : (L.name+' Train')));
+    const sub = rec.completed
+      ? ('Best time: '+fmtTime(rec.bestTime))
+      : (rec.bestFilled>0 ? ('Best: '+rec.bestFilled+' / '+total+' stops') : 'Not started');
+    info.appendChild(el('div','pl-sub', sub));
+    row.appendChild(info);
+    const status = el('div', rec.completed? 'pl-status done':'pl-status', rec.completed? '✓ Done':(rec.bestFilled>0?Math.round(rec.bestFilled/total*100)+'%':'—'));
+    row.appendChild(status);
+    row.onclick = ()=>{ location.hash = '#/line/'+id; };
+    list.appendChild(row);
+  });
+}
+
+/* ============ init ============ */
+route();
+
+/* register service worker */
+
+
+</script>
+</body>
+</html>
