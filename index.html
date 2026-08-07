@@ -145,6 +145,11 @@ body{
 }
 .station-row input.inline-input::placeholder{color:var(--muted); font-weight:400;}
 
+/* ---------- borough border markers ---------- */
+.border-divider{display:flex; align-items:center; gap:8px; padding:6px 18px 6px 44px;}
+.border-divider .boro{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); white-space:nowrap; font-weight:700;}
+.border-divider .boro-line{flex:1; height:1px; background:repeating-linear-gradient(to right, var(--border) 0 4px, transparent 4px 8px);}
+
 </style>
 </head>
 <body>
@@ -226,6 +231,61 @@ const DATA = {"order": ["1", "2", "3", "4", "5", "6", "7", "A", "B", "C", "D", "
 const LINES = DATA.lines;
 const ORDER = DATA.order;
 const DISPLAY_ORDER = ["1","2","3","4","5","6","7","A","C","E","B","D","F","M","N","Q","R","W","G","L","J","Z","S42","SFR","SRP","SIR"];
+
+/* ============ borough border markers ============ */
+/* each entry: on this line, station `a` is immediately followed by station `b`
+   in the app's stored (top-to-bottom) order; ba/bb are the boroughs on each side. */
+const BORDERS = [
+  {line:"4", a:"Bowling Green", ba:"Manhattan", b:"Borough Hall", bb:"Brooklyn"},
+  {line:"5", a:"Bowling Green", ba:"Manhattan", b:"Borough Hall", bb:"Brooklyn"},
+  {line:"R", a:"Whitehall St-South Ferry", ba:"Manhattan", b:"Court St", bb:"Brooklyn"},
+  {line:"2", a:"Wall St", ba:"Manhattan", b:"Clark St", bb:"Brooklyn"},
+  {line:"3", a:"Wall St", ba:"Manhattan", b:"Clark St", bb:"Brooklyn"},
+  {line:"A", a:"Fulton St", ba:"Manhattan", b:"High St", bb:"Brooklyn"},
+  {line:"C", a:"Fulton St", ba:"Manhattan", b:"High St", bb:"Brooklyn"},
+  {line:"N", a:"Canal St", ba:"Manhattan", b:"Atlantic Av-Barclays Ctr", bb:"Brooklyn"},
+  {line:"Q", a:"Canal St", ba:"Manhattan", b:"DeKalb Av", bb:"Brooklyn"},
+  {line:"B", a:"Grand St", ba:"Manhattan", b:"DeKalb Av", bb:"Brooklyn"},
+  {line:"D", a:"Grand St", ba:"Manhattan", b:"Atlantic Av-Barclays Ctr", bb:"Brooklyn"},
+  {line:"F", a:"East Broadway", ba:"Manhattan", b:"York St", bb:"Brooklyn"},
+  {line:"M", a:"Delancey St-Essex St", ba:"Manhattan", b:"Marcy Av", bb:"Brooklyn"},
+  {line:"J", a:"Delancey St-Essex St", ba:"Manhattan", b:"Marcy Av", bb:"Brooklyn"},
+  {line:"Z", a:"Delancey St-Essex St", ba:"Manhattan", b:"Marcy Av", bb:"Brooklyn"},
+  {line:"L", a:"1 Av", ba:"Manhattan", b:"Bedford Av", bb:"Brooklyn"},
+
+  {line:"7", a:"Grand Central-42 St", ba:"Manhattan", b:"Vernon Blvd-Jackson Av", bb:"Queens"},
+  {line:"E", a:"Lexington Av/53 St", ba:"Manhattan", b:"Court Sq-23 St", bb:"Queens"},
+  {line:"F", a:"Court Sq-23 St", ba:"Queens", b:"Lexington Av/53 St", bb:"Manhattan"},
+  {line:"N", a:"Queensboro Plaza", ba:"Queens", b:"Lexington Av/59 St", bb:"Manhattan"},
+  {line:"R", a:"Queens Plaza", ba:"Queens", b:"Lexington Av/59 St", bb:"Manhattan"},
+  {line:"M", a:"21 St-Queensbridge", ba:"Queens", b:"Roosevelt Island", bb:"Manhattan"},
+
+  {line:"4", a:"138 St-Grand Concourse", ba:"Bronx", b:"125 St", bb:"Manhattan"},
+  {line:"5", a:"138 St-Grand Concourse", ba:"Bronx", b:"125 St", bb:"Manhattan"},
+  {line:"6", a:"3 Av-138 St", ba:"Bronx", b:"125 St", bb:"Manhattan"},
+  {line:"2", a:"149 St-Grand Concourse", ba:"Bronx", b:"135 St", bb:"Manhattan"},
+  {line:"B", a:"161 St-Yankee Stadium", ba:"Bronx", b:"155 St", bb:"Manhattan"},
+  {line:"D", a:"161 St-Yankee Stadium", ba:"Bronx", b:"155 St", bb:"Manhattan"},
+  {line:"1", a:"231 St", ba:"Bronx", b:"Marble Hill-225 St", bb:"Manhattan"},
+
+  {line:"G", a:"21 St", ba:"Queens", b:"Greenpoint Av", bb:"Brooklyn"},
+  {line:"M", a:"Myrtle-Wyckoff Avs", ba:"Brooklyn", b:"Seneca Av", bb:"Queens"},
+  {line:"A", a:"Grant Av", ba:"Brooklyn", b:"80 St", bb:"Queens"},
+  {line:"J", a:"Cypress Hills", ba:"Brooklyn", b:"75 St-Elderts Ln", bb:"Queens"},
+  {line:"Z", a:"Crescent St", ba:"Brooklyn", b:"75 St-Elderts Ln", bb:"Queens"}
+];
+const BORDER_MAP = new Map();
+BORDERS.forEach(b=> BORDER_MAP.set(b.line+'::'+b.a+'::'+b.b, b));
+function borderBetween(lineId, nameA, nameB){
+  return BORDER_MAP.get(lineId+'::'+nameA+'::'+nameB) || null;
+}
+function makeBorderDivider(b){
+  const row = el('div','border-divider');
+  row.appendChild(el('span','boro', b.ba));
+  row.appendChild(el('span','boro-line'));
+  row.appendChild(el('span','boro', b.bb));
+  return row;
+}
 
 /* ============ fuzzy matching ============ */
 function normalize(s){
@@ -389,15 +449,19 @@ function renderLineBrowse(lineId){
   const scroll = document.getElementById('line-scroll');
   scroll.innerHTML = '';
   const root = el('div','trunk-col');
-  buildBrowseSegments(L.segments, root, L);
+  buildBrowseSegments(L.segments, root, L, lineId);
   scroll.appendChild(root);
   document.getElementById('line-test-btn').onclick = ()=>{ location.hash = '#/test/'+lineId; };
 }
-function buildBrowseSegments(segments, container, L){
+function buildBrowseSegments(segments, container, L, lineId){
   segments.forEach(seg=>{
     if(seg.type==='trunk'){
-      seg.stops.forEach(name=>{
+      seg.stops.forEach((name,idx)=>{
         container.appendChild(makeStationRow(name, L, false));
+        if(idx < seg.stops.length-1){
+          const b = borderBetween(lineId, name, seg.stops[idx+1]);
+          if(b) container.appendChild(makeBorderDivider(b));
+        }
       });
     } else {
       const hint = el('div','fork-hint','⟷ swipe to see other branches');
@@ -405,7 +469,7 @@ function buildBrowseSegments(segments, container, L){
       const forkRow = el('div','fork-row');
       seg.branches.forEach(branchSegs=>{
         const col = el('div','branch-col');
-        buildBrowseSegments(branchSegs, col, L);
+        buildBrowseSegments(branchSegs, col, L, lineId);
         forkRow.appendChild(col);
       });
       container.appendChild(forkRow);
@@ -436,7 +500,7 @@ function startTest(lineId){
   scroll.innerHTML = '';
   const flat = [];
   const root = el('div','trunk-col');
-  buildTestSegments(L.segments, root, L, flat);
+  buildTestSegments(L.segments, root, L, flat, lineId);
   scroll.appendChild(root);
 
   testState = {
@@ -455,13 +519,17 @@ function startTest(lineId){
     document.getElementById('stopwatch').textContent = fmtTime(Date.now()-testState.startTime);
   }, 250);
 }
-function buildTestSegments(segments, container, L, flat){
+function buildTestSegments(segments, container, L, flat, lineId){
   segments.forEach(seg=>{
     if(seg.type==='trunk'){
-      seg.stops.forEach(name=>{
+      seg.stops.forEach((name,idx)=>{
         const row = makeStationRow(name, L, true);
         container.appendChild(row);
         flat.push({name, row, blank:row._blank});
+        if(idx < seg.stops.length-1){
+          const b = borderBetween(lineId, name, seg.stops[idx+1]);
+          if(b) container.appendChild(makeBorderDivider(b));
+        }
       });
     } else {
       const hint = el('div','fork-hint','⟷ swipe to see other branches');
@@ -469,7 +537,7 @@ function buildTestSegments(segments, container, L, flat){
       const forkRow = el('div','fork-row');
       seg.branches.forEach(branchSegs=>{
         const col = el('div','branch-col');
-        buildTestSegments(branchSegs, col, L, flat);
+        buildTestSegments(branchSegs, col, L, flat, lineId);
         forkRow.appendChild(col);
       });
       container.appendChild(forkRow);
